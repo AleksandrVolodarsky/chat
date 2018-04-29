@@ -46,6 +46,7 @@ export default new Vue({
     connect: function(){
       console.info('Socket connected')
       this.$store.dispatch('requestTasks');
+      this.$store.dispatch('requestUsers');
       window['t'] = this;
     },
     banner_error: function(v) {
@@ -53,8 +54,13 @@ export default new Vue({
       console.error(v);
     },
     task_all: function(tasks) {
-      console.log('Task all', tasks);
       this.$store.commit('setTasks', tasks);
+    },
+    users_all: function(users) {
+      this.$store.commit('setUsers', users);
+    },
+    messages: function(messages) {
+      this.$store.commit('setMessages', messages);
     }
   }
 })

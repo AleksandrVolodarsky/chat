@@ -52,6 +52,7 @@ export default {
       window.localStorage.setItem('cn_user', JSON.stringify(val));
       this.$router.push('/');
       this.$store.dispatch('requestTasks');
+      this.$store.dispatch('requestUsers');
     }
   }
 }

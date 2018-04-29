@@ -1,14 +1,14 @@
 <template>
   <div>
     <app-sidebar></app-sidebar>
-    <main v-if="task">
+    <main v-if="task && taskOwner">
       <div class="toolbar"><h3>{{ task.title }}</h3></div>
       <div class="messages">
         <div class="first-row row no-gutter">
           <div class="col-md-1"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
           <div class="col-md-23">
             <div class="title">
-              <b>{{ task.owner }}</b>
+              <b>{{ taskOwner.name }}</b>
               <at-tooltip placement="top" content="information"><span class="time"> 12:38 PM</span></at-tooltip>
             </div>
             <div class="description">
@@ -35,6 +35,7 @@
 </template>
 <script>
 import store from '../store';
+import vm from '../main';
 import * as autosize from 'autosize';
 
 export default {
@@ -46,28 +47,62 @@ export default {
   },
   mounted: function() {
     setInterval(() => { autosize(document.querySelectorAll('textarea')); }, 500);
-    console.log('Ready');
-  },
-  beforeRouteUpdate(to, from, next) {
-    store.commit('setCurrentTask', to.params.task_id);
-    next();
+    this.$socket.emit(
+      'messages', 
+      {
+        token: this.$store.state.user.token,
+        task_id: this.$route.params.task_id
+      }
+    );
   },
   computed: {
     task() {
       return this.$store.state.current_task;
+    },
+    taskOwner() {
+      return this.$store.state.current_task_owner;
     }
   },
   sockets: {
     task_all: function(tasks) {
       this.$store.commit('setCurrentTask', this.$route.params.task_id);
+      this.$store.commit('setCurrentTaskOwner');
+    },
+    users_all: function(users) {
+      this.$store.commit('setCurrentTaskOwner');
+    },
+    messages: function(messages) {
+      
     }
   },
   methods: {
     onSubmit(e) {
       if (!e.shiftKey) {
+        this.$socket.emit(
+          'message_add', 
+          {
+            token: this.$store.state.user.token,
+            message: e.target.value,
+            task_id: this.$store.state.current_task._id
+          }
+        );
+        e.target.value = '';
         e.preventDefault();
       }
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    store.commit('setCurrentTask', to.params.task_id);
+    next(
+      vm => {
+        vm.$store.dispatch('requestMessages', to.params.task_id);
+      }
+    );
+  },
+  beforeRouteUpdate(to, from, next) {
+    store.commit('setCurrentTask', to.params.task_id);
+    this.$store.dispatch('requestMessages', to.params.task_id);
+    next();
   }
 }
 </script>
