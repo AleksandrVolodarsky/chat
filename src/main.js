@@ -18,7 +18,7 @@ Vue.component('app-message-separator', MessageSeparator);
 Vue.component('app-sidebar', Sidebar);
 Vue.component('app-esc', Esc);
 Vue.component('app-avatar', Avatar);
-Vue.use(VueSocketio, 'http://localhost:13665/');
+Vue.use(VueSocketio, 'http://localhost:13665/', store);
 
 Vue.config.productionTip = false
 
@@ -45,22 +45,19 @@ export default new Vue({
   sockets:{
     connect: function(){
       console.info('Socket connected')
-      this.$store.dispatch('requestTasks');
-      this.$store.dispatch('requestUsers');
+      if (this.$store.state.user && this.$store.state.user.token) {
+        this.$store
+          .dispatch('requestUsers').then(
+            (users) => {
+              return this.$store.dispatch('requestTasks');
+            }
+          );
+      }
       window['t'] = this;
     },
     banner_error: function(v) {
       this.$Message.error(v.msg);
       console.error(v);
-    },
-    task_all: function(tasks) {
-      this.$store.commit('setTasks', tasks);
-    },
-    users_all: function(users) {
-      this.$store.commit('setUsers', users);
-    },
-    messages: function(messages) {
-      this.$store.commit('setMessages', messages);
     }
   }
 })

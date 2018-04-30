@@ -49,5 +49,6 @@ export default {
   .at-menu{
     position: fixed;
     height: 100%;
+    overflow-y: auto;
   }
 </style>

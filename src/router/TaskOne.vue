@@ -47,13 +47,6 @@ export default {
   },
   mounted: function() {
     setInterval(() => { autosize(document.querySelectorAll('textarea')); }, 500);
-    this.$socket.emit(
-      'messages', 
-      {
-        token: this.$store.state.user.token,
-        task_id: this.$route.params.task_id
-      }
-    );
   },
   computed: {
     task() {
@@ -61,18 +54,6 @@ export default {
     },
     taskOwner() {
       return this.$store.state.current_task_owner;
-    }
-  },
-  sockets: {
-    task_all: function(tasks) {
-      this.$store.commit('setCurrentTask', this.$route.params.task_id);
-      this.$store.commit('setCurrentTaskOwner');
-    },
-    users_all: function(users) {
-      this.$store.commit('setCurrentTaskOwner');
-    },
-    messages: function(messages) {
-      
     }
   },
   methods: {
@@ -93,15 +74,10 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     store.commit('setCurrentTask', to.params.task_id);
-    next(
-      vm => {
-        vm.$store.dispatch('requestMessages', to.params.task_id);
-      }
-    );
+    next();
   },
   beforeRouteUpdate(to, from, next) {
     store.commit('setCurrentTask', to.params.task_id);
-    this.$store.dispatch('requestMessages', to.params.task_id);
     next();
   }
 }

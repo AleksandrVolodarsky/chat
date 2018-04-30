@@ -21,9 +21,6 @@
 <script>
 export default {
   name: 'Login',
-  created: function() {
-    console.log('Created', this);
-  },
   data() {
     return {
       login: '',
@@ -38,6 +35,17 @@ export default {
         {
           email: this.login,
           password: this.password
+        },
+        u => {
+          this.$store.commit('setUser', u);
+          this.$store
+            .dispatch('requestUsers').then(
+              (users) => {
+                console.log('from promise', users);
+                return this.$store.dispatch('requestTasks');
+              }
+            );
+          this.$router.push('/');
         }
       );
     }
@@ -45,14 +53,6 @@ export default {
   computed: {
     valid(){
       return this.login != '' && this.password.length > 4;
-    }
-  },
-  sockets: {
-    login: function(val) {
-      window.localStorage.setItem('cn_user', JSON.stringify(val));
-      this.$router.push('/');
-      this.$store.dispatch('requestTasks');
-      this.$store.dispatch('requestUsers');
     }
   }
 }

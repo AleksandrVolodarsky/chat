@@ -32,6 +32,10 @@ export default {
         {
           password: this.password,
           key: this.$route.params.id
+        },
+        v => {
+          this.$Message.success('Success! You changed your password!');
+          this.$router.push('/login');
         }
       );
     }
@@ -39,12 +43,6 @@ export default {
   computed: {
     valid(){
       return this.password.length > 4;
-    }
-  },
-  sockets: {
-    reset_password: function(val) {
-      this.$Message.success('Success! You changed your password!');
-      this.$router.push('/login');
     }
   }
 }

@@ -45,6 +45,10 @@ export default {
           email: this.login,
           password: this.password,
           name: this.name
+        },
+        v => {
+          this.$Message.success('Thank you! Registration complete.');
+          this.$router.push('/login');
         }
       );
     }
@@ -52,12 +56,6 @@ export default {
   computed: {
     valid(){
       return this.login != '' && this.name != '' && this.password.length > 4 && this.i_agree != false;
-    }
-  },
-  sockets: {
-    registration: function(v) {
-      this.$Message.success('Thank you! Registration complete.');
-      this.$router.push('/login');
     }
   }
 }

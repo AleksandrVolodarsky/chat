@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import vm from './main';
 
 Vue.use(Vuex)
 
@@ -18,16 +17,18 @@ export default new Vuex.Store({
   mutations: {
     setUser(state, user) {
       state.user = user;
+      window.localStorage.setItem('cn_user', JSON.stringify(user));
     },
     setUsers(state, users) {
       state.users = users;
     },
     setTasks(state, tasks) {
       state.tasks = tasks;
+      this.commit('setCurrentTask', state.current_task_id);
+      this.commit('setCurrentTaskOwner');
     },
-    setMessages(state, messages) {
-      console.log(messages);
-      state.messages = messages;
+    setMessages(state, v) {
+      state.messages = v;
     },
     addTask(state, task) {
       if (!(state.tasks instanceof Array)) {
@@ -37,6 +38,7 @@ export default new Vuex.Store({
     },
     setCurrentTask(state, task_id) {
       state.current_task_id = task_id;
+      this.dispatch('requestMessages', task_id);
       if (state.tasks instanceof Array) {
         let task = state.tasks.filter(t => t._id == task_id);
         if (task instanceof Array) { 
@@ -57,25 +59,53 @@ export default new Vuex.Store({
   },
   actions: {
     requestTasks(context) {
-      if (context.state.user && context.state.user.token) {
-        vm.$socket.emit('task_all', { token: context.state.user.token });
-      }
+      return new Promise(
+        (resolve, reject) => {
+          this._vm.$socket.emit(
+            'task_all', 
+            { 
+              token: context.state.user.token 
+            },
+            v => {
+              context.commit('setTasks', v);
+              resolve(v);
+            }
+          );
+        }
+      );
     },
     requestUsers(context) {
-      if (context.state.user && context.state.user.token) {
-        vm.$socket.emit('users_all', { token: context.state.user.token });
-      }
+      return new Promise(
+        (resolve, reject) => {
+          this._vm.$socket.emit(
+            'users_all', 
+            { 
+              token: context.state.user.token 
+            },
+            v => {
+              context.commit('setUsers', v);
+              resolve(v);
+            }
+          );
+        }
+      );
     },
     requestMessages(context, task_id) {
-      if (context.state.tasks) {
-        vm.$socket.emit(
-          'messages',
-          {
-            token: vm.$store.state.user.token,
-            task_id: task_id
-          }
-        );
-      }
+      return new Promise(
+        (resolve, reject) => {
+          this._vm.$socket.emit(
+            'messages',
+            {
+              token: context.state.user.token,
+              task_id: task_id
+            },
+            v => {
+              context.commit('setMessages', { task_id: task_id, messages: v });
+              resolve({ task_id: task_id, messages: v });
+            }
+          );
+        }
+      );
     }
   }
 })

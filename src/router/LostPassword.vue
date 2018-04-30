@@ -33,6 +33,10 @@ export default {
         {
           email: this.login,
           origin: window.location.origin
+        },
+        v => {
+          this.$Message.success('Check your email for a link to reset your password.');
+          this.$router.push('/login');
         }
       );
     }
@@ -40,12 +44,6 @@ export default {
   computed: {
     valid(){
       return this.login != '';
-    }
-  },
-  sockets: {
-    lost_password : function(val) {
-      this.$Message.success('Check your email for a link to reset your password.');
-      this.$router.push('/login');
     }
   }
 }
