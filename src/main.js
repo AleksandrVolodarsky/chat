@@ -11,9 +11,14 @@ import Sidebar from './components/Sidebar'
 import Esc from './components/Esc'
 import Avatar from './components/Avatar'
 import Message from './components/Message'
+import Messages from './components/Messages'
+import * as moment from 'vue-moment';
 
-Vue.use(AtUI)
+Vue.use(AtUI);
+Vue.use(moment);
 Vue.component('app-or-separator', OrSeparator);
+Vue.component('app-message', Message);
+Vue.component('app-messages', Messages);
 Vue.component('app-message-separator', MessageSeparator);
 Vue.component('app-sidebar', Sidebar);
 Vue.component('app-esc', Esc);
@@ -58,6 +63,14 @@ export default new Vue({
     banner_error: function(v) {
       this.$Message.error(v.msg);
       console.error(v);
+    },
+    message_add: function(m) {
+      if (m.ops[0].task_id == this.$store.state.current_task._id) {
+        this.$store.commit(
+          'setMessages', 
+          this.$store.state.messages.concat([m.ops[0]])
+        );
+      }
     }
   }
 })

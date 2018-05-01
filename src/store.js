@@ -28,6 +28,14 @@ export default new Vuex.Store({
       this.commit('setCurrentTaskOwner');
     },
     setMessages(state, v) {
+      if (v instanceof Array) {
+        v = v.map(
+          v => {
+            v.owner_obj = state.users.find(u => u._id == v.owner);
+            return v;
+          }
+        );
+      }
       state.messages = v;
     },
     addTask(state, task) {
@@ -100,8 +108,8 @@ export default new Vuex.Store({
               task_id: task_id
             },
             v => {
-              context.commit('setMessages', { task_id: task_id, messages: v });
-              resolve({ task_id: task_id, messages: v });
+              context.commit('setMessages', v);
+              resolve(v);
             }
           );
         }

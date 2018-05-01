@@ -3,21 +3,7 @@
     <app-sidebar></app-sidebar>
     <main v-if="task && taskOwner">
       <div class="toolbar"><h3>{{ task.title }}</h3></div>
-      <div class="messages">
-        <div class="first-row row no-gutter">
-          <div class="col-md-1"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
-          <div class="col-md-23">
-            <div class="title">
-              <b>{{ taskOwner.name }}</b>
-              <at-tooltip placement="top" content="information"><span class="time"> 12:38 PM</span></at-tooltip>
-            </div>
-            <div class="description">
-              {{ task.description }}
-            </div>
-          </div>
-        </div>
-        <app-message-separator title="Description"></app-message-separator>
-      </div>
+      <app-messages :task="task" :taskOwner="taskOwner" :messages="messages"></app-messages>
       <div class="bottom">
         <form>
           <div class="message-area">
@@ -54,6 +40,9 @@ export default {
     },
     taskOwner() {
       return this.$store.state.current_task_owner;
+    },
+    messages() {
+      return this.$store.state.messages;
     }
   },
   methods: {
@@ -67,7 +56,7 @@ export default {
             task_id: this.$store.state.current_task._id
           }
         );
-        e.target.value = '';
+        this.msg = '';
         e.preventDefault();
       }
     }
@@ -101,34 +90,6 @@ main{
 
 .toolbar h3{
   line-height: 56px;
-}
-
-.messages{
-  box-sizing: border-box;
-  position: absolute;
-  top: 56px;
-  left: 0;
-  right: 0;
-  bottom: 80px;
-}
-
-.first-row{
-  padding: 20px;
-  margin-right: 0;
-  margin-left: 0;
-}
-
-.first-row .time{
-  font-size: 12px;
-  color: #3F536E;
-}
-
-.first-row .description{
-  margin-top: 5px;
-}
-
-.first-row .title{
-  line-height: 12px;
 }
 
 .bottom{
