@@ -234,6 +234,10 @@ main{
   margin-top: 10px;
   display: block;
 }
+
+.participants{
+  line-height: 26px;
+}
 </style>
 <style>
   

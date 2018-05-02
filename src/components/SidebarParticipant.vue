@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-participant">
-    <div class="badge"></div>
+    <div class="badge" v-bind:class="{ active: isActive }"></div>
     <app-avatar v-bind:name="user.name" :size="20" :radius="2"></app-avatar>
     
     <b>{{ user.name }}</b>
@@ -13,8 +13,10 @@ export default {
   props: ['user_id'],
   computed: {
     user() {
-      console.log(this.user_id);
       return this.$store.state.users.find(u => u._id == this.user_id);
+    },
+    isActive() {
+      return this.$store.getters.isOnline(this.user_id);
     }
   },
   methods: {
@@ -64,11 +66,15 @@ export default {
   }
 
   .sidebar-participant .badge{
-    background: #13CE66;
+    background: #EEF0F0;
     border-radius: 100%;
     width: 9px;
     height: 9px;
     margin-right: 7px;
+  }
+
+  .sidebar-participant .badge.active{
+    background: #13CE66;
   }
 
   .sidebar-participant b{
