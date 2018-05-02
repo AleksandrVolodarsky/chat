@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: null,
+    user: JSON.parse(window.localStorage.getItem('cn_user')),
     users: null,
     tasks: null,
     messages: null,

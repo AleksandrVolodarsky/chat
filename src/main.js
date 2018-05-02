@@ -12,6 +12,7 @@ import Esc from './components/Esc'
 import Avatar from './components/Avatar'
 import Message from './components/Message'
 import Messages from './components/Messages'
+import RightSidebar from './components/RightSidebar'
 import * as moment from 'vue-moment';
 
 Vue.use(AtUI);
@@ -23,18 +24,16 @@ Vue.component('app-message-separator', MessageSeparator);
 Vue.component('app-sidebar', Sidebar);
 Vue.component('app-esc', Esc);
 Vue.component('app-avatar', Avatar);
+Vue.component('app-right-sidebar', RightSidebar);
 Vue.use(VueSocketio, 'http://localhost:13665/', store);
 
 Vue.config.productionTip = false
 
 router.beforeEach(
   (to, from, next) => { 
-    const user = JSON.parse(window.localStorage.getItem('cn_user'));
-
-    if (to.meta.requires_auth === true && (!user || !user.token)) {
+    if (to.meta.requires_auth === true && (!store.state.user || !store.state.user.token)) {
       next('/login');
     } else {
-      store.commit('setUser', user);
       next();
     }
   }

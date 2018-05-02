@@ -16,7 +16,8 @@
     <app-message 
       v-if="messages"
       v-for="message in messages"
-      v-bind:message="message"></app-message>
+      v-bind:message="message"
+      :key="message._id"></app-message>
   </div>
 </template>
 <script>
@@ -37,13 +38,9 @@ export default {
 }
 </script>
 <style scoped>
-  .messages{
+.messages{
   box-sizing: border-box;
-  position: absolute;
-  top: 56px;
-  left: 0;
-  right: 0;
-  bottom: 80px;
+  flex: 1;
   overflow-y: auto;
 }
 

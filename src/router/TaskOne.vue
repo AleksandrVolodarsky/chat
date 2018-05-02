@@ -2,19 +2,38 @@
   <div>
     <app-sidebar></app-sidebar>
     <main v-if="task && taskOwner">
-      <div class="toolbar"><h3>{{ task.title }}</h3></div>
-      <app-messages :task="task" :taskOwner="taskOwner" :messages="messages"></app-messages>
-      <div class="bottom">
-        <form>
-          <div class="message-area">
-            <at-tooltip placement="top" content="Add files"><at-button><i class="icon icon-paperclip"></i></at-button></at-tooltip>
-            <textarea 
-              rows="1" 
-              v-model="msg" 
-              placeholder="Write something and press ENTER" 
-              @keydown.enter="onSubmit"></textarea>
+      <div class="toolbar">
+        <h3>{{ task.title }}</h3>
+        <ul class="buttons">
+          <li><i class="icon icon-info"></i></li>
+        </ul>
+      </div>
+      <div class="content-area">
+        <div class="first-col">
+          <app-messages :task="task" :taskOwner="taskOwner" :messages="messages"></app-messages>
+          <div class="bottom">
+            <form>
+              <div class="message-area">
+                <at-tooltip placement="top" content="Add files"><at-button><i class="icon icon-paperclip"></i></at-button></at-tooltip>
+                <textarea 
+                  rows="1" 
+                  v-model="msg" 
+                  placeholder="Write something and press ENTER" 
+                  @keydown.enter="onSubmit"></textarea>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
+        <app-right-sidebar title="Info">
+          <label class="participants">Participants 
+            <at-select filterable size="large" v-on:on-change="participantChange">
+              <at-option 
+                v-for="user in users" 
+                :value="user._id" 
+                :key="user._id">{{ user.name }}</at-option>
+            </at-select>
+          </label>
+        </app-right-sidebar>
       </div>
     </main>
   </div>
@@ -43,6 +62,9 @@ export default {
     },
     messages() {
       return this.$store.state.messages;
+    },
+    users() {
+      return this.$store.state.users;
     }
   },
   methods: {
@@ -59,6 +81,9 @@ export default {
         this.msg = '';
         e.preventDefault();
       }
+    },
+    participantChange(v) {
+      this.$socket.emit('participant_add', v);
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -78,26 +103,45 @@ main{
   left: 240px;
   bottom: 0;
   right: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .toolbar{
   width: 100%;
-  height: 56px;
+  flex-basis: 56px;
   border-bottom: 1px solid #e2ecf4;
   box-sizing: border-box;
   padding: 0 20px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .toolbar h3{
   line-height: 56px;
+  margin-right: auto;
 }
 
+.content-area{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.content-area .first-col{
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.second-col{
+  flex-basis: 442px;
+  background: red;
+}
 .bottom{
   padding: 20px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  order: 1;
+  flex-shrink: 0;
 }
 
 .message-area{
@@ -147,6 +191,30 @@ main{
 
 .message-area textarea:focus{
   outline: 0;
+}
+
+.toolbar .buttons{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.toolbar .buttons li{
+  padding: 0 10px;
+  margin-top: 8px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 4px;
+}
+
+.toolbar .buttons li:hover{
+  background: #f3f7fa;
+}
+
+.participants{
+
 }
 </style>
 <style>
