@@ -13,6 +13,7 @@ import Avatar from './components/Avatar'
 import Message from './components/Message'
 import Messages from './components/Messages'
 import RightSidebar from './components/RightSidebar'
+import SidebarParticipant from './components/SidebarParticipant'
 import * as moment from 'vue-moment';
 
 Vue.use(AtUI);
@@ -25,6 +26,7 @@ Vue.component('app-sidebar', Sidebar);
 Vue.component('app-esc', Esc);
 Vue.component('app-avatar', Avatar);
 Vue.component('app-right-sidebar', RightSidebar);
+Vue.component('app-sidebar-participant', SidebarParticipant);
 Vue.use(VueSocketio, 'http://localhost:13665/', store);
 
 Vue.config.productionTip = false
@@ -70,6 +72,10 @@ export default new Vue({
           this.$store.state.messages.concat([m.ops[0]])
         );
       }
+    },
+    update_task: function(t) {
+      this.$store.commit('updateTask', t);
+      this.$store.dispatch('updateCurrentTask');
     }
   }
 })

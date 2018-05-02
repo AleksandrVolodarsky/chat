@@ -24,8 +24,11 @@ export default new Vuex.Store({
     },
     setTasks(state, tasks) {
       state.tasks = tasks;
-      this.commit('setCurrentTask', state.current_task_id);
-      this.commit('setCurrentTaskOwner');
+    },
+    updateTask(state, task) {
+      let t, index;
+      index = state.tasks.findIndex(t => t._id == task._id);
+      state.tasks[index] = task;
     },
     setMessages(state, v) {
       if (v instanceof Array) {
@@ -52,16 +55,14 @@ export default new Vuex.Store({
         if (task instanceof Array) { 
           task = task[0];
         }
-        state.current_task = task;
-      }
-    },
-    setCurrentTaskOwner(state) {
-      if (state.users instanceof Array && state.current_task) {
-        let owner_obj = state.users.filter(u => u._id == state.current_task.owner);
-        if (owner_obj instanceof Array) { 
-          owner_obj = owner_obj[0];
+        if (state.users instanceof Array) {
+          let owner_obj = state.users.filter(u => u._id == task.owner);
+          if (owner_obj instanceof Array) { 
+            owner_obj = owner_obj[0];
+          }
+          state.current_task_owner = owner_obj;
         }
-        state.current_task_owner = owner_obj;
+        state.current_task = task;
       }
     }
   },
@@ -114,6 +115,9 @@ export default new Vuex.Store({
           );
         }
       );
+    },
+    updateCurrentTask(context) {
+      context.commit('setCurrentTask', context.state.current_task_id);
     }
   }
 })

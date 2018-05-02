@@ -28,11 +28,16 @@
           <label class="participants">Participants 
             <at-select filterable size="large" v-on:on-change="participantChange">
               <at-option 
-                v-for="user in users" 
+                v-for="user in posible_participants" 
                 :value="user._id" 
                 :key="user._id">{{ user.name }}</at-option>
             </at-select>
           </label>
+          <span v-if="task.participants" class="participants-list">
+            <app-sidebar-participant
+              v-for="participant in task.participants"
+              :user_id="participant"></app-sidebar-participant>
+          </span>
         </app-right-sidebar>
       </div>
     </main>
@@ -63,8 +68,12 @@ export default {
     messages() {
       return this.$store.state.messages;
     },
-    users() {
-      return this.$store.state.users;
+    posible_participants() {
+      let ret = [];
+      if (this.$store.state.users instanceof Array && this.$store.state.current_task.participants instanceof Array) {
+        ret = this.$store.state.users.filter(u => this.$store.state.current_task.participants.indexOf(u._id) == -1);
+      }
+      return ret;
     }
   },
   methods: {
@@ -83,7 +92,14 @@ export default {
       }
     },
     participantChange(v) {
-      this.$socket.emit('participant_add', v);
+      this.$socket.emit(
+        'participant_add', 
+        { 
+          token: this.$store.state.user.token,
+          task_id: this.$store.state.current_task._id,
+          id: v
+        }
+      );
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -213,8 +229,9 @@ main{
   background: #f3f7fa;
 }
 
-.participants{
-
+.participants-list{
+  margin-top: 10px;
+  display: block;
 }
 </style>
 <style>

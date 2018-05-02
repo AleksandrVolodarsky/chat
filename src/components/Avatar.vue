@@ -35,7 +35,7 @@ export default {
   computed: {
     style() {
       this.local_url = this.local_url || `https://api.adorable.io/avatars/${ this.size }/${ this.name }@adorable.io.png`;
-      return `background-image: url("${ this.local_url }"); height: ${ this.size }px; width: ${ this.size }px; border-radius: ${ this.radius }ps;`;
+      return `background-image: url("${ this.local_url }"); height: ${ this.size }px; width: ${ this.size }px; border-radius: ${ this.radius }px;`;
     }
   }
 }
