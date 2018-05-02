@@ -16,9 +16,6 @@
 <script>
 export default {
   name: 'Sidebar',
-  created: function() {
-    // console.log('Sidebar created');
-  },
   methods: {
     clickMenu(name) {
       if (this[name]) {

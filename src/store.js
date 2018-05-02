@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     user: JSON.parse(window.localStorage.getItem('cn_user')),
     users: null,
+    online_offline_tokens: [],
     tasks: null,
     messages: null,
     current_task_id: null,
@@ -64,6 +65,20 @@ export default new Vuex.Store({
         }
         state.current_task = task;
       }
+    },
+    SOCKET_ONLINE_OFFLINE(state, tokens) {
+      state.online_offline_tokens = tokens;
+    }
+  },
+  getters: {
+    token: state => {
+      if (state.user && state.user.token) {
+        return state.user.token;
+      }
+      return null;
+    },
+    isOnline: (state) => (id) => {
+      return state.online_offline_tokens.indexOf(id) > -1;
     }
   },
   actions: {

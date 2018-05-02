@@ -36,6 +36,7 @@
           <span v-if="task.participants" class="participants-list">
             <app-sidebar-participant
               v-for="participant in task.participants"
+              :key="participant"
               :user_id="participant"></app-sidebar-participant>
           </span>
         </app-right-sidebar>

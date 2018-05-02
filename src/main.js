@@ -5,6 +5,7 @@ import AtUI from 'at-ui'
 import router from './router'
 import store from './store';
 import VueSocketio from 'vue-socket.io';
+import io from 'socket.io-client';
 import OrSeparator from './components/OrSeparator'
 import MessageSeparator from './components/MessageSeparator'
 import Sidebar from './components/Sidebar'
@@ -27,8 +28,7 @@ Vue.component('app-esc', Esc);
 Vue.component('app-avatar', Avatar);
 Vue.component('app-right-sidebar', RightSidebar);
 Vue.component('app-sidebar-participant', SidebarParticipant);
-Vue.use(VueSocketio, 'http://localhost:13665/', store);
-
+Vue.use(VueSocketio, io('http://localhost:13665/', { query: { token: store.getters.token }}), store);
 Vue.config.productionTip = false
 
 router.beforeEach(
@@ -74,8 +74,17 @@ export default new Vue({
       }
     },
     update_task: function(t) {
-      this.$store.commit('updateTask', t);
-      this.$store.dispatch('updateCurrentTask');
+      this.$store
+        .dispatch('requestTasks')
+        .then(
+          res => {
+            this.$store.commit('updateTask', t);
+            this.$store.dispatch('updateCurrentTask');
+          }
+        );
+    },
+    users_all: function(users) {
+      this.$store.commit('setUsers', users);
     }
   }
 })

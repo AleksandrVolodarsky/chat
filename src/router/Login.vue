@@ -41,7 +41,6 @@ export default {
           this.$store
             .dispatch('requestUsers').then(
               (users) => {
-                console.log('from promise', users);
                 return this.$store.dispatch('requestTasks');
               }
             );
