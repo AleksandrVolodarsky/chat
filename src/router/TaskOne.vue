@@ -5,7 +5,7 @@
       <div class="toolbar">
         <h3>{{ task.title }}</h3>
         <ul class="buttons">
-          <li><i class="icon icon-info"></i></li>
+          <li @click="toggleSidebarInfoShow" :class="{ active: is_show_info }"><i class="icon icon-info"></i></li>
         </ul>
       </div>
       <div class="content-area">
@@ -24,7 +24,7 @@
             </form>
           </div>
         </div>
-        <app-right-sidebar title="Info">
+        <app-right-sidebar title="Info" v-if="is_show_info" @exit="toggleSidebarInfoShow">
           <label class="participants">Participants 
             <at-select filterable size="large" v-on:on-change="participantChange">
               <at-option 
@@ -69,6 +69,9 @@ export default {
     messages() {
       return this.$store.state.messages;
     },
+    is_show_info() {
+      return this.$store.state.is_show_sidebar_info == 1;
+    },
     posible_participants() {
       let ret = [];
       if (this.$store.state.users instanceof Array) {
@@ -105,6 +108,13 @@ export default {
           id: v
         }
       );
+    },
+    toggleSidebarInfoShow() {
+      if (this.is_show_info) {
+        this.$store.commit('setIsShowSidebarInfo', 0);
+      } else {
+        this.$store.commit('setIsShowSidebarInfo', 1);
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -230,6 +240,7 @@ main{
   border-radius: 4px;
 }
 
+.toolbar .buttons li.active,
 .toolbar .buttons li:hover{
   background: #f3f7fa;
 }

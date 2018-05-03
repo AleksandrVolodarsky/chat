@@ -13,7 +13,8 @@ export default new Vuex.Store({
     current_task_id: null,
     current_task: null,
     current_task_owner: null,
-    current_task_messages: null
+    current_task_messages: null,
+    is_show_sidebar_info: window.localStorage.getItem('cn_is_show_sidebar_info')
   },
   mutations: {
     setUser(state, user) {
@@ -69,6 +70,10 @@ export default new Vuex.Store({
     },
     SOCKET_ONLINE_OFFLINE(state, ids) {
       state.online_offline_ids = ids[0];
+    },
+    setIsShowSidebarInfo(state, is_show) {
+      state.is_show_sidebar_info = is_show;
+      window.localStorage.setItem('cn_is_show_sidebar_info', state.is_show_sidebar_info);
     }
   },
   getters: {

@@ -2,7 +2,7 @@
   <div class="right-sidebar">
     <header>
         <h2><b>{{ title }}</b></h2>
-        <a><i class="icon icon-x"></i></a>
+        <a @click="ck"><i class="icon icon-x"></i></a>
     </header>
     <div class="content">
         <div class="text">
@@ -14,7 +14,12 @@
 <script>
 export default {
   name: 'RightSidebar',
-  props: ['title']
+  props: ['title'],
+  methods: {
+    ck() {
+      this.$emit('exit');
+    }
+  }
 }
 </script>
 <style scoped>
