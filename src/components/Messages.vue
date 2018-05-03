@@ -15,8 +15,9 @@
     <app-message-separator title="Description"></app-message-separator>
     <app-message 
       v-if="messages"
-      v-for="message in messages"
+      v-for="(message, index) in messages"
       v-bind:message="message"
+      v-bind:prev="messages[index-1]"
       :key="message._id"></app-message>
   </div>
 </template>

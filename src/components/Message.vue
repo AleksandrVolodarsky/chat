@@ -1,12 +1,15 @@
 <template>
-  <div class="message">
-    <div class="left"><app-avatar v-bind:name="message.owner_obj.name" url=""></app-avatar></div>
+  <div class="message" :class="{ same: same }">
+    <div class="left">
+      <app-avatar v-if="!same" v-bind:name="message.owner_obj.name" url=""></app-avatar>
+      <at-tooltip v-if="same && message.created" placement="top-left" :content="message.created"><span class="time"> {{ message.created | moment("h:mm A") }}</span></at-tooltip>
+    </div>
     <div class="right">
-      <div class="title">
+      <div v-if="!same" class="title">
         <b>{{ message.owner_obj.name }}</b>
-        <at-tooltip v-if="message.created" placement="top" :content="message.created"><span class="time"> {{ message.created | moment("MMMM Do YYYY, h:mm:ss a") }}</span></at-tooltip>
+        <at-tooltip v-if="message.created" placement="top-left" :content="message.created"><span class="time"> {{ message.created | moment("h:mm A") }}</span></at-tooltip>
       </div>
-      <div class="description">
+      <div class="description" :class="{ mt: !same }">
         {{ message.message }}
       </div>
     </div>
@@ -15,7 +18,15 @@
 <script>
 export default {
   name: 'Message',
-  props: ['message']
+  props: ['message', 'prev'],
+  mounted() {
+    console.log('prev', this.prev, this.same);
+  },
+  computed: {
+    same() {
+      return this.prev && this.message.owner == this.prev.owner;
+    }
+  }
 }
 </script>
 <style scoped>
@@ -24,10 +35,35 @@ export default {
     margin-right: 0;
     margin-left: 0;
     display: flex;
+    line-height: 15px;
+  }
+
+  .message.same{
+    padding: 5px 20px 5px 0;
   }
 
   .message .left{
     flex-basis: 42px;
+    position: relative;
+  }
+
+  .message.same .left{
+    flex-basis: 62px;
+    text-align: right;
+    padding-right: 9px;
+  }
+
+  .message:hover{
+    background: #FAFBFC;
+  }
+
+  .message.same:hover .left .time{
+    display: block;
+  }
+
+  .message.same .left .time{
+    display: none;
+    line-height: 12px;
   }
 
   .message .right{
@@ -39,7 +75,7 @@ export default {
     color: #3F536E;
   }
 
-  .message .description{
+  .message .description.mt{
     margin-top: 5px;
   }
 

@@ -9,3 +9,12 @@ export default {
   name: 'App'
 }
 </script>
+<style>
+body{
+  font-size: 15px;
+}
+
+.at-tooltip__popper{
+  white-space: nowrap;
+}
+</style>
