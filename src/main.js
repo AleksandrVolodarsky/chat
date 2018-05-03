@@ -63,7 +63,9 @@ export default new Vue({
           )
           .then(
             res => {
-              this.$store.commit('setCurrentTask', this.$store.state.current_task_id);
+              if (res.length > 0) {
+                this.$store.commit('setCurrentTask', this.$store.state.current_task_id);
+              }
             }
           );
       }

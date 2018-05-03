@@ -49,6 +49,7 @@ export default new Vuex.Store({
       state.tasks.push(task);
     },
     setCurrentTask(state, task_id) {
+      if (!task_id) { return false; }
       state.current_task_id = task_id;
       this.dispatch('requestMessages', task_id);
       if (state.tasks instanceof Array) {

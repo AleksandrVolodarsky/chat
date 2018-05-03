@@ -71,8 +71,12 @@ export default {
     },
     posible_participants() {
       let ret = [];
-      if (this.$store.state.users instanceof Array && this.$store.state.current_task.participants instanceof Array) {
-        ret = this.$store.state.users.filter(u => this.$store.state.current_task.participants.indexOf(u._id) == -1);
+      if (this.$store.state.users instanceof Array) {
+        if (this.task.participants instanceof Array) {
+          ret = this.$store.state.users.filter(u => this.task.participants.indexOf(u._id) == -1);
+        } else {
+          ret = this.$store.state.users;
+        }
       }
       return ret;
     }
