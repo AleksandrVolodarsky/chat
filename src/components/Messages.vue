@@ -5,7 +5,7 @@
       <div class="right">
         <div class="title">
           <b>{{ taskOwner.name }}</b>
-          <at-tooltip placement="top" content="information"><span class="time"> 12:38 PM</span></at-tooltip>
+          <at-tooltip v-if="task.created" placement="top-left" :content="task.created"><span class="time"> {{ task.created | moment("h:mm A") }}</span></at-tooltip>
         </div>
         <div class="description">
           {{ task.description }}

@@ -2,12 +2,30 @@
   <div class="message" :class="{ same: same }">
     <div class="left">
       <app-avatar v-if="!same" v-bind:name="message.owner_obj.name" url=""></app-avatar>
-      <at-tooltip v-if="same && message.created" placement="top-left" :content="message.created"><span class="time"> {{ message.created | moment("h:mm A") }}</span></at-tooltip>
+      <at-tooltip v-if="same && message.created" placement="top-left" :content="message.created">
+        <span class="time"> {{ message.created | moment("h:mm A") }}</span> 
+        <i 
+          class="icon" 
+          :class="{ 
+            'icon-star' : !message.starred,
+            'icon-star-on' : message.starred 
+          }" 
+          @click="toggleStar"></i>
+      </at-tooltip>
     </div>
     <div class="right">
       <div v-if="!same" class="title">
         <b>{{ message.owner_obj.name }}</b>
-        <at-tooltip v-if="message.created" placement="top-left" :content="message.created"><span class="time"> {{ message.created | moment("h:mm A") }}</span></at-tooltip>
+        <at-tooltip v-if="message.created" placement="top-left" :content="message.created">
+          <span class="time"> {{ message.created | moment("h:mm A") }}</span> 
+        </at-tooltip>
+        <i 
+          class="icon" 
+          :class="{ 
+            'icon-star' : !message.starred,
+            'icon-star-on' : message.starred 
+          }" 
+          @click="toggleStar"></i>
       </div>
       <div class="description" :class="{ mt: !same }">
         {{ message.message }}
@@ -19,12 +37,20 @@
 export default {
   name: 'Message',
   props: ['message', 'prev'],
-  mounted() {
-    console.log('prev', this.prev, this.same);
-  },
   computed: {
     same() {
       return this.prev && this.message.owner == this.prev.owner;
+    }
+  },
+  methods: {
+    toggleStar() {
+      this.$socket.emit(
+        'message_star', 
+        { 
+          token: this.$store.state.user.token,
+          message_id: this.message._id
+        }
+      );
     }
   }
 }
@@ -81,5 +107,15 @@ export default {
 
   .message .title{
     line-height: 12px;
+  }
+
+  .message .title .icon{
+    font-size: 12px;
+    line-height: 12px;
+    cursor: pointer;
+  }
+
+  .message .title .icon:hover{
+    color: #FFDC00;
   }
 </style>

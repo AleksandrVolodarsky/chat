@@ -43,6 +43,15 @@ export default new Vuex.Store({
       }
       state.messages = v;
     },
+    updateMessage(state, message) {
+      if (message._id) {
+        let index = state.messages.findIndex(m => m._id == message._id);
+        if (index > -1) {
+          message.owner_obj = state.users.find(u => u._id == message.owner);
+          state.messages[ index ] = message;
+        }
+      }
+    },
     addTask(state, task) {
       if (!(state.tasks instanceof Array)) {
         state.tasks = [];

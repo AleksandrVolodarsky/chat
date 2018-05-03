@@ -1,8 +1,6 @@
 <template>
   <div class="sidebar">
     <at-menu mode="vertical" active-name="1" @on-select="clickMenu">
-      <at-menu-item name="1"><i class="icon icon-home"></i>Navigation One</at-menu-item>
-      <at-menu-item name="2"><i class="icon icon-layers"></i>Navigation Two</at-menu-item>
       <at-menu-item name="logout"><i class="icon icon-power"></i>Log out</at-menu-item>
       <h2><router-link to="/tasks">Tasks</router-link><router-link to="/task/add"><i class="icon icon-plus-circle"></i></router-link></h2>
       <at-menu-item

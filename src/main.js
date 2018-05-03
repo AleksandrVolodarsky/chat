@@ -95,6 +95,10 @@ export default new Vue({
     },
     users_all: function(users) {
       this.$store.commit('setUsers', users);
+    },
+    message_star: function(msg) {
+      this.$store.commit('updateMessage', msg);
+      this.$store.commit('setMessages', this.$store.state.messages);
     }
   }
 })
