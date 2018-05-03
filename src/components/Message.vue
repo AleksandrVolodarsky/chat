@@ -1,7 +1,7 @@
 <template>
-  <div class="first-row row no-gutter">
-    <div class="col-md-1"><app-avatar v-bind:name="message.owner_obj.name" url=""></app-avatar></div>
-    <div class="col-md-23">
+  <div class="message">
+    <div class="left"><app-avatar v-bind:name="message.owner_obj.name" url=""></app-avatar></div>
+    <div class="right">
       <div class="title">
         <b>{{ message.owner_obj.name }}</b>
         <at-tooltip v-if="message.created" placement="top" :content="message.created"><span class="time"> {{ message.created | moment("MMMM Do YYYY, h:mm:ss a") }}</span></at-tooltip>
@@ -19,22 +19,31 @@ export default {
 }
 </script>
 <style scoped>
-  .first-row{
+  .message{
     padding: 5px 20px;
     margin-right: 0;
     margin-left: 0;
+    display: flex;
   }
 
-  .first-row .time{
+  .message .left{
+    flex-basis: 42px;
+  }
+
+  .message .right{
+    flex: 1;
+  }
+
+  .message .time{
     font-size: 12px;
     color: #3F536E;
   }
 
-  .first-row .description{
+  .message .description{
     margin-top: 5px;
   }
 
-  .first-row .title{
+  .message .title{
     line-height: 12px;
   }
 </style>

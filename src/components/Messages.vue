@@ -1,8 +1,8 @@
 <template>
   <div class="messages" v-if="task && taskOwner">
-    <div class="first-row row no-gutter">
-      <div class="col-md-1"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
-      <div class="col-md-23">
+    <div class="first-row">
+      <div class="left"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
+      <div class="right">
         <div class="title">
           <b>{{ taskOwner.name }}</b>
           <at-tooltip placement="top" content="information"><span class="time"> 12:38 PM</span></at-tooltip>
@@ -48,6 +48,15 @@ export default {
   padding: 20px;
   margin-right: 0;
   margin-left: 0;
+  display: flex;
+}
+
+.first-row .left{
+  flex-basis: 42px;
+}
+
+.first-row .right{
+  flex: 1;
 }
 
 .first-row .time{

@@ -15,6 +15,7 @@ import Message from './components/Message'
 import Messages from './components/Messages'
 import RightSidebar from './components/RightSidebar'
 import SidebarParticipant from './components/SidebarParticipant'
+import FilterLog from './filters/log';
 import * as moment from 'vue-moment';
 
 Vue.use(AtUI);
@@ -28,6 +29,7 @@ Vue.component('app-esc', Esc);
 Vue.component('app-avatar', Avatar);
 Vue.component('app-right-sidebar', RightSidebar);
 Vue.component('app-sidebar-participant', SidebarParticipant);
+Vue.filter('log', FilterLog);
 Vue.use(VueSocketio, io('http://localhost:13665/', { query: { token: store.getters.token }}), store);
 Vue.config.productionTip = false
 
@@ -53,9 +55,15 @@ export default new Vue({
       console.info('Socket connected')
       if (this.$store.state.user && this.$store.state.user.token) {
         this.$store
-          .dispatch('requestUsers').then(
+          .dispatch('requestUsers')
+          .then(
             (users) => {
               return this.$store.dispatch('requestTasks');
+            }
+          )
+          .then(
+            res => {
+              this.$store.commit('setCurrentTask', this.$store.state.current_task_id);
             }
           );
       }
