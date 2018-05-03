@@ -5,12 +5,17 @@
       <div class="toolbar">
         <h3>{{ task.title }}</h3>
         <ul class="buttons">
-          <li @click="toggleSidebarInfoShow" :class="{ active: is_show_info }"><i class="icon icon-info"></i></li>
+          <li v-if="starred_messages.length > 0" @click="toggleRightSidebar('starred')"><i class="icon icon-star"></i></li>
+          <li @click="toggleRightSidebar('info')" :class="{ active: showed_sidebar_right == 'info' }"><i class="icon icon-info"></i></li>
         </ul>
       </div>
       <div class="content-area">
         <div class="first-col">
-          <app-messages :task="task" :taskOwner="taskOwner" :messages="messages"></app-messages>
+          <app-messages 
+            :show_first_message="true"
+            :task="task" 
+            :taskOwner="taskOwner" 
+            :messages="messages"></app-messages>
           <div class="bottom">
             <form>
               <div class="message-area">
@@ -24,7 +29,7 @@
             </form>
           </div>
         </div>
-        <app-right-sidebar title="Info" v-if="is_show_info" @exit="toggleSidebarInfoShow">
+        <app-right-sidebar title="Info" v-if="showed_sidebar_right == 'info'" @exit="toggleRightSidebar('info')">
           <label class="participants">Participants 
             <at-select filterable size="large" v-on:on-change="participantChange">
               <at-option 
@@ -39,6 +44,16 @@
               :key="participant"
               :user_id="participant"></app-sidebar-participant>
           </span>
+        </app-right-sidebar>
+        <app-right-sidebar 
+          v-if="showed_sidebar_right == 'starred'"
+          title="Starred messages" 
+          @exit="toggleRightSidebar('starred')">
+          <app-messages 
+            :show_first_message="false"
+            :task="task" 
+            :taskOwner="taskOwner" 
+            :messages="starred_messages"></app-messages>
         </app-right-sidebar>
       </div>
     </main>
@@ -69,8 +84,11 @@ export default {
     messages() {
       return this.$store.state.messages;
     },
-    is_show_info() {
-      return this.$store.state.is_show_sidebar_info == 1;
+    starred_messages() {
+      return this.$store.getters.starred_messages;
+    },
+    showed_sidebar_right() {
+      return this.$store.state.showed_sidebar_right;
     },
     posible_participants() {
       let ret = [];
@@ -109,11 +127,11 @@ export default {
         }
       );
     },
-    toggleSidebarInfoShow() {
-      if (this.is_show_info) {
-        this.$store.commit('setIsShowSidebarInfo', 0);
+    toggleRightSidebar(name) {
+      if (this.showed_sidebar_right == name) {
+        this.$store.commit('setShowedSidebarRight', '');
       } else {
-        this.$store.commit('setIsShowSidebarInfo', 1);
+        this.$store.commit('setShowedSidebarRight', name);
       }
     }
   },
@@ -238,6 +256,7 @@ main{
   height: 40px;
   line-height: 40px;
   border-radius: 4px;
+  display: inline-block;
 }
 
 .toolbar .buttons li.active,

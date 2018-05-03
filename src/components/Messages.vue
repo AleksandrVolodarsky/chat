@@ -1,6 +1,6 @@
 <template>
   <div class="messages" v-if="task && taskOwner">
-    <div class="first-row">
+    <div v-if="show_first_message" class="first-row">
       <div class="left"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
       <div class="right">
         <div class="title">
@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <app-message-separator title="Description"></app-message-separator>
+    <app-message-separator  v-if="show_first_message" title="Description"></app-message-separator>
     <app-message 
       v-if="messages"
       v-for="(message, index) in messages"
@@ -24,7 +24,7 @@
 <script>
 export default {
   name: 'Messages',
-  props: ['messages', 'task', 'taskOwner'],
+  props: ['messages', 'task', 'taskOwner', 'show_first_message'],
   methods: {
     scrollToEnd() {
       this.$el.scrollTop = this.$el.scrollHeight;

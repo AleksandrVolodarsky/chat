@@ -14,7 +14,7 @@ export default new Vuex.Store({
     current_task: null,
     current_task_owner: null,
     current_task_messages: null,
-    is_show_sidebar_info: window.localStorage.getItem('cn_is_show_sidebar_info')
+    showed_sidebar_right: window.localStorage.getItem('cn_showed_sidebar_right')
   },
   mutations: {
     setUser(state, user) {
@@ -80,9 +80,9 @@ export default new Vuex.Store({
     SOCKET_ONLINE_OFFLINE(state, ids) {
       state.online_offline_ids = ids[0];
     },
-    setIsShowSidebarInfo(state, is_show) {
-      state.is_show_sidebar_info = is_show;
-      window.localStorage.setItem('cn_is_show_sidebar_info', state.is_show_sidebar_info);
+    setShowedSidebarRight(state, name) {
+      state.showed_sidebar_right = name;
+      window.localStorage.setItem('cn_showed_sidebar_right', name);
     }
   },
   getters: {
@@ -91,6 +91,12 @@ export default new Vuex.Store({
         return state.user.token;
       }
       return null;
+    },
+    starred_messages: state => {
+      if (state.messages instanceof Array) {
+        return state.messages.filter(m => m.starred == true);
+      }
+      return [];
     },
     isOnline: (state) => (id) => {
       return state.online_offline_ids.indexOf(id) > -1;
