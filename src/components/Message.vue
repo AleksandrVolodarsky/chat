@@ -3,7 +3,7 @@
     <div class="left">
       <app-avatar v-if="!same" v-bind:name="message.owner_obj.name" url=""></app-avatar>
       <at-tooltip v-if="same && message.created" placement="top-left" :content="message.created">
-        <span class="time"> {{ message.created | moment("h:mm A") }}</span> 
+        <span class="time"> {{ message.created | moment("h:mm") }}</span> 
         <i 
           class="icon" 
           :class="{ 
@@ -17,7 +17,7 @@
       <div v-if="!same" class="title">
         <b>{{ message.owner_obj.name }}</b>
         <at-tooltip v-if="message.created" placement="top-left" :content="message.created">
-          <span class="time"> {{ message.created | moment("h:mm A") }}</span> 
+          <span class="time"> {{ message.created | moment("h:mm") }}</span> 
         </at-tooltip>
         <i 
           class="icon" 
@@ -82,9 +82,10 @@ export default {
   .message:hover{
     background: #FAFBFC;
   }
-
+  
+  .message.same:hover .left .icon,
   .message.same:hover .left .time{
-    display: block;
+    display: inline-block;
   }
 
   .message.same .left .time{
@@ -108,13 +109,17 @@ export default {
   .message .title{
     line-height: 12px;
   }
-
+  .message .left .icon{
+    display: none;
+  }
+  .message .left .icon, 
   .message .title .icon{
     font-size: 12px;
     line-height: 12px;
     cursor: pointer;
   }
-
+  
+  .message .left .icon:hover,
   .message .title .icon:hover{
     color: #FFDC00;
   }
