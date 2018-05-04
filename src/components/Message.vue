@@ -102,6 +102,10 @@ export default {
     color: #3F536E;
   }
 
+  .message .description{
+    line-height: 22px;
+  }
+
   .message .description.mt{
     margin-top: 5px;
   }

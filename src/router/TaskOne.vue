@@ -17,9 +17,12 @@
             :taskOwner="taskOwner" 
             :messages="messages"></app-messages>
           <div class="bottom">
+            <files-manager @remove="removeFile" :files="files"></files-manager>
             <form>
               <div class="message-area">
-                <at-tooltip placement="top" content="Add files"><at-button><i class="icon icon-paperclip"></i></at-button></at-tooltip>
+                <at-tooltip placement="top" content="Add files">
+                  <at-button @click="pickFiles"><i class="icon icon-paperclip"></i></at-button>
+                </at-tooltip>
                 <textarea 
                   rows="1" 
                   v-model="msg" 
@@ -63,13 +66,22 @@
 import store from '../store';
 import vm from '../main';
 import * as autosize from 'autosize';
+import MessageFilesManager from '../components/MessageFilesManager';
 
 export default {
   name: 'TaskOne',
+  components: {
+    'files-manager': MessageFilesManager
+  },
   data() {
     return {
-      msg: ''
+      msg: '',
+      files: [],
+      filepicker: window.filepicker
     }
+  },
+  created() {
+    this.filepicker.setKey('AGMv9OYHwTG6M8UT9foDxz');
   },
   mounted: function() {
     setInterval(() => { autosize(document.querySelectorAll('textarea')); }, 500);
@@ -133,6 +145,22 @@ export default {
       } else {
         this.$store.commit('setShowedSidebarRight', name);
       }
+    },
+    pickFiles() {
+      window.filepicker.pickMultiple(
+        {
+          key: 'AGMv9OYHwTG6M8UT9foDxz',
+          extensions: ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.txt'],
+          max_size: 62914560,
+          max_files: 15
+        },
+        files => {
+          this.files = files;
+        }
+      );
+    },
+    removeFile(file) {
+      this.files = this.files.filter(f => f.id != file.id);
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -272,10 +300,9 @@ main{
 .participants{
   line-height: 26px;
 }
+
 </style>
 <style>
-  
-
   .message-area .at-tooltip__trigger{
     height: 100%;
   }
