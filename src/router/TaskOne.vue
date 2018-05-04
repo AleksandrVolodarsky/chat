@@ -47,7 +47,7 @@
         </div>
         <app-right-sidebar title="Info" v-if="showed_sidebar_right == 'info'" @exit="toggleRightSidebar('info')">
           <label class="participants">Participants 
-            <at-select filterable clearable size="large" @on-change="participantChange">
+            <at-select :disabled="posible_participants.length == 0" size="large" @on-change="participantChange">
               <at-option 
                 v-for="user in posible_participants" 
                 :value="user._id" 
@@ -97,7 +97,8 @@ export default {
     return {
       msg: '',
       files: [],
-      filepicker: window.filepicker
+      filepicker: window.filepicker,
+      participant: ''
     }
   },
   created() {
@@ -404,5 +405,8 @@ main{
 <style>
   .message-area .at-tooltip__trigger{
     height: 100%;
+  }
+  .participants .at-select__input{
+    z-index: 2;
   }
 </style>
