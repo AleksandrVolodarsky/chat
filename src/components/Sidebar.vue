@@ -1,6 +1,16 @@
 <template>
   <div class="sidebar">
     <at-menu mode="vertical" active-name="1" @on-select="clickMenu">
+      <div class="short-info">
+        <div class="left">
+          <app-avatar size="40" :name="user.name" url=""></app-avatar>
+        </div>
+        <div class="right">
+          <b>{{ user.name }}</b>
+          <small><div class="badge" :class="{ active: isActive }"></div>{{ role }}</small>
+        </div>
+      </div>
+      <at-menu-item to="/settings" name="settings"><i class="icon icon-settings"></i>Settings</at-menu-item>
       <at-menu-item name="logout"><i class="icon icon-power"></i>Log out</at-menu-item>
       <h2><router-link to="/tasks">Tasks</router-link><router-link to="/task/add"><i class="icon icon-plus-circle"></i></router-link></h2>
       <at-menu-item
@@ -17,6 +27,12 @@ export default {
   computed: {
     user() {
       return this.$store.state.user;
+    },
+    role() {
+      return ['Administrator', 'Client', 'Freelancer'][this.user.role];
+    },
+    isActive() {
+      return this.$store.getters.isOnline(this.user._id);
     }
   },
   methods: {
@@ -61,5 +77,38 @@ export default {
 
   .at-menu__item .at-badge{
     float: right;
+  }
+
+  .sidebar .short-info{
+    display: flex;
+    padding: 22px 16px 12px 32px;
+  }
+
+  .sidebar .short-info .left{
+    flex-basis: 50px;
+  }
+  
+  .sidebar .short-info .right{
+    flex: 1;
+    line-height: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar .short-info .right small{
+    line-height: 20px;
+  }
+
+  .sidebar .badge{
+    background: #EEF0F0;
+    border-radius: 100%;
+    width: 9px;
+    height: 9px;
+    margin-right: 7px;
+    display: inline-block;
+  }
+
+  .sidebar .badge.active{
+    background: #13CE66;
   }
 </style>
