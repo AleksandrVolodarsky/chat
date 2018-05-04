@@ -31,6 +31,11 @@ export default {
           title: this.title,
           description: this.description,
           token: this.$store.state.user.token
+        },
+        t => {
+          this.$router.push(`/task/one/${ t.insertedIds[0] }`);
+          this.$store.commit('addTask', t.ops[0]);
+          this.$Message.success('Task successfully added!');
         }
       );
     }
@@ -38,14 +43,6 @@ export default {
   computed: {
     valid(){
       return this.title != '' && this.description.length > 24;
-    }
-  },
-  sockets: {
-    task_add: function(val) {
-      console.log('Task add', val);
-      this.$router.push(`/task/one/${ val.insertedIds[0] }`);
-      this.$store.commit('addTask', val.ops[0]);
-      this.$Message.success('Task successfully added!');
     }
   }
 }
