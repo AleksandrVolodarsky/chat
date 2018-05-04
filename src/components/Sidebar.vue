@@ -3,7 +3,7 @@
     <at-menu mode="vertical" active-name="1" @on-select="clickMenu">
       <div class="short-info">
         <div class="left">
-          <app-avatar size="40" :name="user.name" url=""></app-avatar>
+          <app-avatar :size="40" :name="user.name" url=""></app-avatar>
         </div>
         <div class="right">
           <b>{{ user.name }}</b>
