@@ -7,6 +7,7 @@
         <ul class="buttons">
           <li v-if="starred_messages.length > 0" @click="toggleRightSidebar('starred')"><i class="icon icon-star"></i></li>
           <li @click="toggleRightSidebar('info')" :class="{ active: showed_sidebar_right == 'info' }"><i class="icon icon-info"></i></li>
+          <li v-if="all_files.length > 0" @click="toggleRightSidebar('files')" :class="{ active: showed_sidebar_right == 'files' }"><i class="icon icon-layers"></i></li>
         </ul>
       </div>
       <div class="content-area">
@@ -58,6 +59,13 @@
             :taskOwner="taskOwner" 
             :messages="starred_messages"></app-messages>
         </app-right-sidebar>
+        <app-right-sidebar 
+          v-if="showed_sidebar_right == 'files'"
+          title="All task files" 
+          @exit="toggleRightSidebar('files')">
+          
+          <app-files :files="all_files"></app-files>
+        </app-right-sidebar>
       </div>
     </main>
   </div>
@@ -95,6 +103,22 @@ export default {
     },
     messages() {
       return this.$store.state.messages;
+    },
+    all_files() {
+      let files = [];
+      if (this.task.files instanceof Array && this.task.files.length) {
+        files = files.concat(this.task.files);
+      }
+      if (this.messages instanceof Array && this.messages.length) {
+        this.messages.map(
+          m => {
+            if (m.files instanceof Array && m.files.length) {
+              files = files.concat(m.files);
+            }
+          }
+        );
+      }
+      return files;
     },
     starred_messages() {
       return this.$store.getters.starred_messages;

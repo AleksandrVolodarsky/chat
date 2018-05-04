@@ -15,6 +15,7 @@ import Message from './components/Message'
 import Messages from './components/Messages'
 import RightSidebar from './components/RightSidebar'
 import SidebarParticipant from './components/SidebarParticipant'
+import Files from './components/Files'
 import FilterLog from './filters/log';
 import * as moment from 'vue-moment';
 
@@ -29,6 +30,7 @@ Vue.component('app-esc', Esc);
 Vue.component('app-avatar', Avatar);
 Vue.component('app-right-sidebar', RightSidebar);
 Vue.component('app-sidebar-participant', SidebarParticipant);
+Vue.component('app-files', Files);
 Vue.filter('log', FilterLog);
 Vue.use(VueSocketio, io('http://localhost:13665/', { query: { token: store.getters.token }}), store);
 Vue.config.productionTip = false
