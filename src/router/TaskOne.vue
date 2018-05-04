@@ -191,10 +191,14 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     store.commit('setCurrentTask', to.params.task_id);
+    store.commit('setTasks', store.state.tasks);
+    store.dispatch('requestMessages', to.params.task_id);
     next();
   },
   beforeRouteUpdate(to, from, next) {
     store.commit('setCurrentTask', to.params.task_id);
+    store.commit('setTasks', store.state.tasks);
+    store.dispatch('requestMessages', to.params.task_id);
     next();
   }
 }

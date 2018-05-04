@@ -36,10 +36,9 @@
   </div>
 </template>
 <script>
-
 export default {
   name: 'Message',
-  props: ['message', 'prev'],
+  props: ['message', 'prev', 'index'],
   computed: {
     same() {
       return this.prev && this.message.owner == this.prev.owner;
@@ -83,6 +82,10 @@ export default {
     },
     open(file) {
       window.location = file.url;
+    },
+    isVisible() {
+      let bcr = this.$el.getBoundingClientRect();
+      return bcr.top >= 0 &&  bcr.bottom <= window.innerHeight;
     }
   }
 }

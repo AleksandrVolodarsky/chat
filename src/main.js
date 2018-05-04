@@ -78,12 +78,12 @@ export default new Vue({
       console.error(v);
     },
     message_add: function(m) {
-      if (m.ops[0].task_id == this.$store.state.current_task._id) {
-        this.$store.commit(
-          'setMessages', 
-          this.$store.state.messages.concat([m.ops[0]])
-        );
-      }
+      // if (m.ops[0].task_id == this.$store.state.current_task._id) {
+      //   this.$store.commit(
+      //     'setMessages', 
+      //     this.$store.state.messages.concat([m.ops[0]])
+      //   );
+      // }
     },
     update_task: function(t) {
       this.$store

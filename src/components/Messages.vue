@@ -12,16 +12,18 @@
         </div>
       </div>
     </div>
-    <app-message-separator  v-if="show_first_message" title="Description"></app-message-separator>
     <app-message 
       v-if="messages"
       v-for="(message, index) in messages"
-      v-bind:message="message"
-      v-bind:prev="messages[index-1]"
+      :index="index"
+      :message="message"
+      :prev="messages[index-1]"
       :key="message._id"></app-message>
   </div>
 </template>
 <script>
+import * as _ from 'lodash';
+
 export default {
   name: 'Messages',
   props: ['messages', 'task', 'taskOwner', 'show_first_message'],
@@ -31,6 +33,7 @@ export default {
     }
   },
   updated() {
+    console.log('updated', this.messages.length);
     this.scrollToEnd();
   },
   mounted() {

@@ -7,13 +7,18 @@
         v-if="$store.state.tasks"
         v-for="task in $store.state.tasks" 
         :key="task._id"
-        v-bind:to="'/task/one/' + task._id">{{ task.title }}</at-menu-item>
+        v-bind:to="'/task/one/' + task._id">{{ task.title }}<at-badge v-if="getUnreadCount(task) > 0" :value="getUnreadCount(task)"></at-badge></at-menu-item>
     </at-menu>
   </div>
 </template>
 <script>
 export default {
   name: 'Sidebar',
+  computed: {
+    user() {
+      return this.$store.state.user;
+    }
+  },
   methods: {
     clickMenu(name) {
       if (this[name]) {
@@ -23,13 +28,20 @@ export default {
     logout() {
       window.localStorage.removeItem('cn_user');
       this.$router.push('/login');
+    },
+    getUnreadCount(task) {
+      let last_read_index = 0;
+      if (this.user.last_read_index && this.user.last_read_index[task._id]) {
+        last_read_index = parseInt(this.user.last_read_index[task._id]) || 0;
+      }
+      return task.messages_count - last_read_index;
     }
   }
 }
 </script>
 <style scoped>
   h2{
-    padding: 12px 32px;
+    padding: 12px 16px 12px 32px;
     color: #8DABC4;
     font-size: 12px;
     font-weight: bold;
@@ -45,5 +57,9 @@ export default {
     position: fixed;
     height: 100%;
     overflow-y: auto;
+  }
+
+  .at-menu__item .at-badge{
+    float: right;
   }
 </style>

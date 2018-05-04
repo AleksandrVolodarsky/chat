@@ -33,6 +33,7 @@ export default new Vuex.Store({
       state.tasks[index] = task;
     },
     setMessages(state, v) {
+      console.log('meSsages');
       if (v instanceof Array) {
         v = v.map(
           v => {
@@ -44,6 +45,7 @@ export default new Vuex.Store({
       state.messages = v;
     },
     updateMessage(state, message) {
+      console.log('updateMessage');
       if (message._id) {
         let index = state.messages.findIndex(m => m._id == message._id);
         if (index > -1) {
@@ -61,12 +63,12 @@ export default new Vuex.Store({
     setCurrentTask(state, task_id) {
       if (!task_id) { return false; }
       state.current_task_id = task_id;
-      this.dispatch('requestMessages', task_id);
       if (state.tasks instanceof Array) {
         let task = state.tasks.filter(t => t._id == task_id);
         if (task instanceof Array) { 
           task = task[0];
         }
+
         if (state.users instanceof Array) {
           let owner_obj = state.users.filter(u => u._id == task.owner);
           if (owner_obj instanceof Array) { 
@@ -75,6 +77,7 @@ export default new Vuex.Store({
           state.current_task_owner = owner_obj;
         }
         state.current_task = task;
+        this.dispatch('read');
       }
     },
     SOCKET_ONLINE_OFFLINE(state, ids) {
@@ -136,6 +139,7 @@ export default new Vuex.Store({
       );
     },
     requestMessages(context, task_id) {
+      console.log('request messages');
       return new Promise(
         (resolve, reject) => {
           this._vm.$socket.emit(
@@ -154,6 +158,25 @@ export default new Vuex.Store({
     },
     updateCurrentTask(context) {
       context.commit('setCurrentTask', context.state.current_task_id);
+    },
+    read(context) {
+      let last_read_index, task;
+
+      last_read_index = context.state.user.last_read_index || {};
+      task            = context.state.current_task;
+
+      if (last_read_index[task._id] != task.messages_count) {
+        Vue.set(last_read_index, task._id, task.messages_count);
+        Vue.set(context.state.user, 'last_read_index', last_read_index);
+        this._vm.$socket.emit(
+          'read',
+          {
+            token: context.state.user.token,
+            task_id: task._id
+          }
+        )
+        this.commit('setUser', context.state.user);
+      }
     }
   }
 })
