@@ -121,11 +121,13 @@ export default {
           'message_add', 
           {
             token: this.$store.state.user.token,
+            task_id: this.$store.state.current_task._id,
             message: e.target.value,
-            task_id: this.$store.state.current_task._id
+            files: this.files
           }
         );
-        this.msg = '';
+        this.msg   = '';
+        this.files = [];
         e.preventDefault();
       }
     },
