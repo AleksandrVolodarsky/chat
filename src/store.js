@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from './router'
 
 Vue.use(Vuex)
 
@@ -33,7 +34,6 @@ export default new Vuex.Store({
       state.tasks[index] = task;
     },
     setMessages(state, v) {
-      console.log('meSsages');
       if (v instanceof Array) {
         v = v.map(
           v => {
@@ -45,7 +45,6 @@ export default new Vuex.Store({
       state.messages = v;
     },
     updateMessage(state, message) {
-      console.log('updateMessage');
       if (message._id) {
         let index = state.messages.findIndex(m => m._id == message._id);
         if (index > -1) {
@@ -65,10 +64,9 @@ export default new Vuex.Store({
       state.current_task_id = task_id;
       if (state.tasks instanceof Array) {
         let task = state.tasks.filter(t => t._id == task_id);
-        if (task instanceof Array) { 
+        if (task instanceof Array && task.length > 0) { 
           task = task[0];
-        }
-
+        } 
         if (state.users instanceof Array) {
           let owner_obj = state.users.filter(u => u._id == task.owner);
           if (owner_obj instanceof Array) { 
@@ -139,7 +137,6 @@ export default new Vuex.Store({
       );
     },
     requestMessages(context, task_id) {
-      console.log('request messages');
       return new Promise(
         (resolve, reject) => {
           this._vm.$socket.emit(
@@ -177,6 +174,19 @@ export default new Vuex.Store({
         )
         this.commit('setUser', context.state.user);
       }
+    },
+    isAllowToTask(context, task_id) {
+      return new Promise(
+        (resolve, reject) => {
+          if (context.state.tasks instanceof Array) {
+            let t = context.state.tasks.find(t => t._id == task_id);
+            if (t) {
+              return resolve(t);
+            }
+            throw new Error(t);
+          }
+        }
+      )
     }
   }
 })

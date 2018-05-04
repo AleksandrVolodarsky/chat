@@ -37,11 +37,19 @@ Vue.config.productionTip = false
 
 router.beforeEach(
   (to, from, next) => { 
-    if (to.meta.requires_auth === true && (!store.state.user || !store.state.user.token)) {
-      next('/login');
-    } else {
-      next();
-    }
+    Promise.all([
+      store.dispatch('requestUsers'),
+      store.dispatch('requestTasks')
+    ])
+    .then(
+      tasks => {
+        if (to.meta.requires_auth === true && (!store.state.user || !store.state.user.token)) {
+          next('/login');
+        } else {
+          next();
+        }
+      }
+    );
   }
 );
 
@@ -56,20 +64,7 @@ export default new Vue({
     connect: function(){
       console.info('Socket connected')
       if (this.$store.state.user && this.$store.state.user.token) {
-        this.$store
-          .dispatch('requestUsers')
-          .then(
-            (users) => {
-              return this.$store.dispatch('requestTasks');
-            }
-          )
-          .then(
-            res => {
-              if (res.length > 0) {
-                this.$store.commit('setCurrentTask', this.$store.state.current_task_id);
-              }
-            }
-          );
+        this.$store.commit('setCurrentTask', this.$store.state.current_task_id);
       }
       window['t'] = this;
     },
@@ -78,22 +73,32 @@ export default new Vue({
       console.error(v);
     },
     message_add: function(m) {
-      // if (m.ops[0].task_id == this.$store.state.current_task._id) {
-      //   this.$store.commit(
-      //     'setMessages', 
-      //     this.$store.state.messages.concat([m.ops[0]])
-      //   );
-      // }
+      if (m.ops[0].task_id == this.$store.state.current_task._id) {
+        this.$store.commit(
+          'setMessages', 
+          this.$store.state.messages.concat([m.ops[0]])
+        );
+      }
     },
     update_task: function(t) {
       this.$store
         .dispatch('requestTasks')
         .then(
           res => {
+            return this.$store.dispatch('isAllowToTask', t._id)
+          }
+        )
+        .then(
+          task => {
             this.$store.commit('updateTask', t);
             this.$store.dispatch('updateCurrentTask');
           }
-        );
+        )
+        .catch(
+          err => {
+            this.$router.push('/');
+          }
+        )
     },
     users_all: function(users) {
       this.$store.commit('setUsers', users);

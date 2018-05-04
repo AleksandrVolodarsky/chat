@@ -12,11 +12,23 @@
       </div>
       <div class="content-area">
         <div class="first-col">
-          <app-messages 
-            :show_first_message="true"
-            :task="task" 
-            :taskOwner="taskOwner" 
-            :messages="messages"></app-messages>
+
+          <div class="messages" v-if="task && taskOwner">
+            <div class="first-row">
+              <div class="left"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
+              <div class="right">
+                <div class="title">
+                  <b>{{ taskOwner.name }}</b>
+                  <at-tooltip v-if="task.created" placement="top-left" :content="task.created"><span class="time"> {{ task.created | moment("h:mm A") }}</span></at-tooltip>
+                </div>
+                <div class="description">
+                  {{ task.description }}
+                </div>
+              </div>
+            </div>
+            <app-messages :messages="messages"></app-messages>
+          </div>
+
           <div class="bottom">
             <files-manager @remove="removeFile" :files="files"></files-manager>
             <form>
@@ -190,16 +202,38 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    store.commit('setCurrentTask', to.params.task_id);
-    store.commit('setTasks', store.state.tasks);
-    store.dispatch('requestMessages', to.params.task_id);
-    next();
+    store
+      .dispatch('isAllowToTask', to.params.task_id)
+      .then(
+        task => {
+          store.commit('setCurrentTask', to.params.task_id);
+          store.commit('setTasks', store.state.tasks);
+          store.dispatch('requestMessages', to.params.task_id);
+          next();
+        }
+      )
+      .catch(
+        err => {
+          next('/');
+        }
+      )
   },
   beforeRouteUpdate(to, from, next) {
-    store.commit('setCurrentTask', to.params.task_id);
-    store.commit('setTasks', store.state.tasks);
-    store.dispatch('requestMessages', to.params.task_id);
-    next();
+    store
+      .dispatch('isAllowToTask', to.params.task_id)
+      .then(
+        task => {
+          store.commit('setCurrentTask', to.params.task_id);
+          store.commit('setTasks', store.state.tasks);
+          store.dispatch('requestMessages', to.params.task_id);
+          next();
+        }
+      )
+      .catch(
+        err => {
+          next('/');
+        }
+      )
   }
 }
 </script>
@@ -298,6 +332,40 @@ main{
 
 .message-area textarea:focus{
   outline: 0;
+}
+
+.messages{
+  box-sizing: border-box;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.first-row{
+  padding: 20px;
+  margin-right: 0;
+  margin-left: 0;
+  display: flex;
+}
+
+.first-row .left{
+  flex-basis: 42px;
+}
+
+.first-row .right{
+  flex: 1;
+}
+
+.first-row .time{
+  font-size: 12px;
+  color: #3F536E;
+}
+
+.first-row .description{
+  margin-top: 5px;
+}
+
+.first-row .title{
+  line-height: 12px;
 }
 
 .toolbar .buttons{

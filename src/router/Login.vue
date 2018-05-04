@@ -38,12 +38,6 @@ export default {
         },
         u => {
           this.$store.commit('setUser', u);
-          this.$store
-            .dispatch('requestUsers').then(
-              (users) => {
-                return this.$store.dispatch('requestTasks');
-              }
-            );
           this.$router.push('/');
         }
       );

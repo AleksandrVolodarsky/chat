@@ -1,17 +1,5 @@
 <template>
-  <div class="messages" v-if="task && taskOwner">
-    <div v-if="show_first_message" class="first-row">
-      <div class="left"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
-      <div class="right">
-        <div class="title">
-          <b>{{ taskOwner.name }}</b>
-          <at-tooltip v-if="task.created" placement="top-left" :content="task.created"><span class="time"> {{ task.created | moment("h:mm A") }}</span></at-tooltip>
-        </div>
-        <div class="description">
-          {{ task.description }}
-        </div>
-      </div>
-    </div>
+  <div class="all-msgs">
     <app-message 
       v-if="messages"
       v-for="(message, index) in messages"
@@ -26,10 +14,10 @@ import * as _ from 'lodash';
 
 export default {
   name: 'Messages',
-  props: ['messages', 'task', 'taskOwner', 'show_first_message'],
+  props: ['messages'],
   methods: {
     scrollToEnd() {
-      this.$el.scrollTop = this.$el.scrollHeight;
+      document.getElementsByClassName('messages')[0].scrollTop = document.getElementsByClassName('messages')[0].scrollHeight;
     }
   },
   updated() {
@@ -41,38 +29,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.messages{
-  box-sizing: border-box;
-  flex: 1;
-  overflow-y: auto;
-}
-
-.first-row{
-  padding: 20px;
-  margin-right: 0;
-  margin-left: 0;
-  display: flex;
-}
-
-.first-row .left{
-  flex-basis: 42px;
-}
-
-.first-row .right{
-  flex: 1;
-}
-
-.first-row .time{
-  font-size: 12px;
-  color: #3F536E;
-}
-
-.first-row .description{
-  margin-top: 5px;
-}
-
-.first-row .title{
-  line-height: 12px;
-}
-</style>
