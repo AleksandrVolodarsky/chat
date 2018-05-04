@@ -47,7 +47,7 @@
         </div>
         <app-right-sidebar title="Info" v-if="showed_sidebar_right == 'info'" @exit="toggleRightSidebar('info')">
           <label class="participants">Participants 
-            <at-select filterable size="large" v-on:on-change="participantChange">
+            <at-select filterable clearable size="large" @on-change="participantChange">
               <at-option 
                 v-for="user in posible_participants" 
                 :value="user._id" 
@@ -168,6 +168,7 @@ export default {
       }
     },
     participantChange(v) {
+      if (!v) { return }
       this.$socket.emit(
         'participant_add', 
         { 

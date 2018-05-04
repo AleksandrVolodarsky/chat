@@ -21,7 +21,6 @@ export default {
     }
   },
   updated() {
-    console.log('updated', this.messages.length);
     this.scrollToEnd();
   },
   mounted() {
