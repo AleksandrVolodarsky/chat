@@ -1,7 +1,7 @@
 <template>
   <div class="message" :class="{ same: same }">
     <div class="left">
-      <app-avatar v-if="!same" v-bind:name="message.owner_obj.name" url=""></app-avatar>
+      <app-avatar v-if="!same" v-bind:name="message.owner_obj.name" :url="message.owner_obj.avatar"></app-avatar>
       <at-tooltip v-if="same && message.created" placement="top-left" :content="message.created">
         <span class="time"> {{ message.created | moment("h:mm") }}</span> 
         <i 

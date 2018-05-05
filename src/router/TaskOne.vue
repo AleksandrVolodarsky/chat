@@ -15,7 +15,7 @@
 
           <div class="messages" v-if="task && taskOwner">
             <div class="first-row">
-              <div class="left"><app-avatar v-bind:name="task.owner" url=""></app-avatar></div>
+              <div class="left"><app-avatar v-bind:name="taskOwner.name" :url="taskOwner.avatar"></app-avatar></div>
               <div class="right">
                 <div class="title">
                   <b>{{ taskOwner.name }}</b>
@@ -148,6 +148,8 @@ export default {
           ret = this.$store.state.users;
         }
       }
+
+      ret = ret.filter(id => id._id != this.$store.state.user._id);
       return ret;
     }
   },

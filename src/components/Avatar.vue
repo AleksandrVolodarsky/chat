@@ -43,7 +43,7 @@ export default {
 <style scoped>
   .avatar{
     display: block;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
   }
 </style>

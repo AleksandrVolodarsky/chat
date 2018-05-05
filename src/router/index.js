@@ -7,6 +7,7 @@ import LostPassword from './LostPassword'
 import ResetPassword from './ResetPassword'
 import TaskAdd from './TaskAdd'
 import TaskOne from './TaskOne'
+import Settings from './Settings'
 
 Vue.use(Router)
 
@@ -56,5 +57,13 @@ export default new Router({
         requires_auth: true
       }
     },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
+      meta: {
+        requires_auth: true
+      }
+    }
   ]
 })
