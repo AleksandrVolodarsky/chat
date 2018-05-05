@@ -43,7 +43,7 @@
             <app-messages :autoscroll="false" :messages="messages"></app-messages>
           </div>
 
-          <div class="bottom">
+          <div v-if="!task.closed" class="bottom">
             <files-manager @remove="removeFile" :files="files"></files-manager>
             <form>
               <div class="message-area">
@@ -60,7 +60,7 @@
           </div>
         </div>
         <app-right-sidebar title="Info" v-if="showed_sidebar_right == 'info'" @exit="toggleRightSidebar('info')">
-          <label class="participants">Participants 
+          <label v-if="!task.closed" class="participants">Participants 
             <at-select :disabled="posible_participants.length == 0" size="large" @on-change="participantChange">
               <at-option 
                 v-for="user in posible_participants" 
