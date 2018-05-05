@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 
 export default {
   name: 'Messages',
-  props: ['messages'],
+  props: ['messages', 'autoscroll'],
   data() {
     return {
       old_messages_count: -1
@@ -26,15 +26,19 @@ export default {
     }
   },
   updated() {
-    if (this.old_messages_count != this.messages.length) {
-      this.scrollToEnd();
+    if (this.autoscroll) {
+      if (this.old_messages_count != this.messages.length) {
+        this.scrollToEnd();
+      }
+      this.old_messages_count = this.messages.length;
     }
-    this.old_messages_count = this.messages.length;
   },
   mounted() {
-    this.scrollToEnd();
-    if (this.messages instanceof Array) {
-      this.old_messages_count = this.messages.length;
+    if (this.autoscroll) {
+      this.scrollToEnd();
+      if (this.messages instanceof Array) {
+        this.old_messages_count = this.messages.length;
+      }
     }
   }
 }

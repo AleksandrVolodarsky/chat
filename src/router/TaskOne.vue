@@ -26,7 +26,7 @@
                 </div>
               </div>
             </div>
-            <app-messages :messages="messages"></app-messages>
+            <app-messages :autoscroll="false" :messages="messages"></app-messages>
           </div>
 
           <div class="bottom">
@@ -66,9 +66,7 @@
           title="Starred messages" 
           @exit="toggleRightSidebar('starred')">
           <app-messages 
-            :show_first_message="false"
-            :task="task" 
-            :taskOwner="taskOwner" 
+            :autoscroll="false" 
             :messages="starred_messages"></app-messages>
         </app-right-sidebar>
         <app-right-sidebar 
