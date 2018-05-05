@@ -37,19 +37,22 @@ Vue.config.productionTip = false
 
 router.beforeEach(
   (to, from, next) => { 
-    Promise.all([
-      store.dispatch('requestUsers'),
-      store.dispatch('requestTasks')
-    ])
-    .then(
-      tasks => {
-        if (to.meta.requires_auth === true && (!store.state.user || !store.state.user.token)) {
-          next('/login');
-        } else {
-          next();
-        }
+    
+    if (to.meta.requires_auth === true) {
+      if ((!store.state.user || !store.state.user.token)) {
+        next('/login');
+      } else {
+        Promise.all([
+          store.dispatch('requestUsers'),
+          store.dispatch('requestTasks')
+        ]).then(
+          res => { next() }
+        );
       }
-    );
+    } else {
+      next();
+    }
+
   }
 );
 
@@ -105,7 +108,6 @@ export default new Vue({
     },
     message_star: function(msg) {
       this.$store.commit('updateMessage', msg);
-      this.$store.commit('setMessages', this.$store.state.messages);
     }
   }
 })

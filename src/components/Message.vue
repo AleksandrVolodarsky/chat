@@ -1,7 +1,7 @@
 <template>
   <div class="message" :class="{ same: same }">
     <div class="left">
-      <app-avatar v-if="!same" v-bind:name="message.owner_obj.name" :url="message.owner_obj.avatar"></app-avatar>
+      <app-avatar v-if="!same" :name="owner_obj.name" :url="owner_obj.avatar"></app-avatar>
       <at-tooltip v-if="same && message.created" placement="top-left" :content="message.created">
         <span class="time"> {{ message.created | moment("h:mm") }}</span> 
         <i 
@@ -15,7 +15,7 @@
     </div>
     <div class="right">
       <div v-if="!same" class="title">
-        <b>{{ message.owner_obj.name }}</b>
+        <b>{{ owner_obj.name }}</b>
         <at-tooltip v-if="message.created" placement="top-left" :content="message.created">
           <span class="time"> {{ message.created | moment("h:mm") }}</span> 
         </at-tooltip>
@@ -57,6 +57,9 @@ export default {
         );
       }
       return images;
+    },
+    owner_obj() {
+      return this.$store.state.users.find(u => u._id == this.message.owner);
     }
   },
   methods: {

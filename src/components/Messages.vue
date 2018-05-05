@@ -15,16 +15,25 @@ import * as _ from 'lodash';
 export default {
   name: 'Messages',
   props: ['messages'],
+  data() {
+    return {
+      old_messages_count: -1
+    };
+  },
   methods: {
     scrollToEnd() {
       document.getElementsByClassName('messages')[0].scrollTop = document.getElementsByClassName('messages')[0].scrollHeight;
     }
   },
   updated() {
-    this.scrollToEnd();
+    if (this.old_messages_count != this.messages.length) {
+      this.scrollToEnd();
+    }
+    this.old_messages_count = this.messages.length;
   },
   mounted() {
     this.scrollToEnd();
+    this.old_messages_count = this.messages.length;
   }
 }
 </script>

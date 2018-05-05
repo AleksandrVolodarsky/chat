@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from './router'
+import * as _ from 'lodash'
 
 Vue.use(Vuex)
 
@@ -34,22 +35,13 @@ export default new Vuex.Store({
       state.tasks[index] = task;
     },
     setMessages(state, v) {
-      if (v instanceof Array) {
-        v = v.map(
-          v => {
-            v.owner_obj = state.users.find(u => u._id == v.owner);
-            return v;
-          }
-        );
-      }
       state.messages = v;
     },
     updateMessage(state, message) {
       if (message._id) {
         let index = state.messages.findIndex(m => m._id == message._id);
         if (index > -1) {
-          message.owner_obj = state.users.find(u => u._id == message.owner);
-          state.messages[ index ] = message;
+          Vue.set(state.messages, index, message);
         }
       }
     },
@@ -110,7 +102,7 @@ export default new Vuex.Store({
           this._vm.$socket.emit(
             'task_all', 
             { 
-              token: context.state.user.token 
+              token: _.get(context, 'state.user.token', '')
             },
             v => {
               context.commit('setTasks', v);
@@ -126,7 +118,7 @@ export default new Vuex.Store({
           this._vm.$socket.emit(
             'users_all', 
             { 
-              token: context.state.user.token 
+              token: _.get(context, 'state.user.token', '') 
             },
             v => {
               context.commit('setUsers', v);

@@ -44,6 +44,7 @@ export default {
     logout() {
       window.localStorage.removeItem('cn_user');
       this.$router.push('/login');
+      this.$store.commit('setUser', null);
     },
     getUnreadCount(task) {
       let last_read_index = 0;
