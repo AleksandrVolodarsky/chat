@@ -5,9 +5,23 @@
       <div class="toolbar">
         <h3>{{ task.title }}</h3>
         <ul class="buttons">
-          <li v-if="starred_messages.length > 0" @click="toggleRightSidebar('starred')"><i class="icon icon-star"></i></li>
-          <li @click="toggleRightSidebar('info')" :class="{ active: showed_sidebar_right == 'info' }"><i class="icon icon-info"></i></li>
-          <li v-if="all_files.length > 0" @click="toggleRightSidebar('files')" :class="{ active: showed_sidebar_right == 'files' }"><i class="icon icon-layers"></i></li>
+          <li 
+            v-if="starred_messages.length > 0" 
+            :class="{ active: showed_sidebar_right == 'starred' }"
+            @click="toggleRightSidebar('starred')"><i class="icon icon-star"></i></li>
+          <li 
+            @click="toggleRightSidebar('info')" 
+            :class="{ active: showed_sidebar_right == 'info' }"><i class="icon icon-info"></i></li>
+          <li 
+            v-if="all_files.length > 0" 
+            @click="toggleRightSidebar('files')" 
+            :class="{ active: showed_sidebar_right == 'files' }"><i class="icon icon-layers"></i></li>
+          <li
+            v-if="!task.closed"
+            @click="toggleCloseOpen"><i class="icon icon-x-circle"></i></li>
+          <li
+            v-if="task.closed"
+            @click="toggleCloseOpen"><i class="icon icon-circle"></i></li>
         </ul>
       </div>
       <div class="content-area">
@@ -185,6 +199,20 @@ export default {
       } else {
         this.$store.commit('setShowedSidebarRight', name);
       }
+    },
+    toggleCloseOpen() {
+      if (this.task.closed) {
+        this.$Message.info('The task has been successfully re-opened!');
+      } else {
+        this.$Message.info('The task has been closed!');
+      }
+      this.$socket.emit(
+        'toggle_close', 
+        {
+          token: this.$store.state.user.token,
+          task_id: this.$store.state.current_task._id
+        }
+      );
     },
     pickFiles() {
       window.filepicker.pickMultiple(

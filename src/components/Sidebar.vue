@@ -14,8 +14,22 @@
       <at-menu-item name="logout"><i class="icon icon-power"></i>Log out</at-menu-item>
       <h2><router-link to="/tasks">Tasks</router-link><router-link to="/task/add"><i class="icon icon-plus-circle"></i></router-link></h2>
       <at-menu-item
-        v-if="$store.state.tasks"
-        v-for="task in $store.state.tasks" 
+        v-if="tasks_opened"
+        v-for="task in tasks_opened" 
+        :key="task._id"
+        v-bind:to="'/task/one/' + task._id">{{ task.title }}<at-badge v-if="getUnreadCount(task) > 0" :value="getUnreadCount(task)"></at-badge></at-menu-item>
+
+      <a 
+        v-if="tasks_closed.length > 0 && !is_show_closed_tasks"
+        @click="toggleShowClosed"
+        class="show-closed-tasks">Show closed tasks <i class="icon icon-more-vertical"></i></a>
+      <a 
+        v-if="tasks_closed.length > 0 && is_show_closed_tasks"
+        @click="toggleShowClosed"
+        class="show-closed-tasks">Hide closed tasks <i class="icon icon-x"></i></a>
+      <at-menu-item
+        v-if="tasks_closed && is_show_closed_tasks"
+        v-for="task in tasks_closed" 
         :key="task._id"
         v-bind:to="'/task/one/' + task._id">{{ task.title }}<at-badge v-if="getUnreadCount(task) > 0" :value="getUnreadCount(task)"></at-badge></at-menu-item>
     </at-menu>
@@ -24,6 +38,11 @@
 <script>
 export default {
   name: 'Sidebar',
+  data() {
+    return {
+      is_show_closed_tasks: false
+    };
+  },
   computed: {
     user() {
       return this.$store.state.user;
@@ -33,6 +52,20 @@ export default {
     },
     isActive() {
       return this.$store.getters.isOnline(this.user._id);
+    },
+    tasks_opened() {
+      let tasks = [];
+      if (this.$store.state.tasks instanceof Array && this.$store.state.tasks.length) {
+        tasks = this.$store.state.tasks.filter(t => t.closed !== true);
+      }
+      return tasks;
+    },
+    tasks_closed() {
+      let tasks = [];
+      if (this.$store.state.tasks instanceof Array && this.$store.state.tasks.length) {
+        tasks = this.$store.state.tasks.filter(t => t.closed === true);
+      }
+      return tasks;
     }
   },
   methods: {
@@ -52,6 +85,10 @@ export default {
         last_read_index = parseInt(this.user.last_read_index[task._id]) || 0;
       }
       return task.messages_count - last_read_index;
+    },
+    toggleShowClosed(e) {
+      e.preventDefault();
+      this.is_show_closed_tasks = !this.is_show_closed_tasks;
     }
   }
 }
@@ -111,5 +148,20 @@ export default {
 
   .sidebar .badge.active{
     background: #13CE66;
+  }
+
+  .show-closed-tasks{
+    padding: 12px 16px 12px 32px;
+    color: #6190E8;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .show-closed-tasks i.icon{
+    float: right;
+    font-size: 14px;
   }
 </style>

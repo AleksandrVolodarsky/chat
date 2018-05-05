@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar-participant">
-    <div class="badge" v-bind:class="{ active: isActive }"></div>
-    <app-avatar v-bind:name="user.name" :size="20" :radius="2"></app-avatar>
+    <div class="badge" :class="{ active: isActive }"></div>
+    <app-avatar :name="user.name" :url="user.avatar" :size="20" :radius="2"></app-avatar>
     
     <b>{{ user.name }}</b>
     <span class="remove" @click="remove"><i class="icon icon-x"></i></span>
