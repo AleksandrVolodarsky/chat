@@ -33,7 +33,9 @@ export default {
   },
   mounted() {
     this.scrollToEnd();
-    this.old_messages_count = this.messages.length;
+    if (this.messages instanceof Array) {
+      this.old_messages_count = this.messages.length;
+    }
   }
 }
 </script>

@@ -29,8 +29,8 @@ export default {
   },
   computed: {
     style() {
-      this.url = this.url || `https://api.adorable.io/avatars/${ this.size }/${ this.name }@adorable.io.png`;
-      return `background-image: url("${ this.url }"); height: ${ this.size }px; width: ${ this.size }px; border-radius: ${ this.radius }px;`;
+      let loc_url = this.url || `https://api.adorable.io/avatars/${ this.size }/${ this.name }@adorable.io.png`;
+      return `background-image: url("${ loc_url }"); height: ${ this.size }px; width: ${ this.size }px; border-radius: ${ this.radius }px;`;
     }
   }
 }
