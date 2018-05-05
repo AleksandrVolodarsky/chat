@@ -4,7 +4,7 @@
     <app-avatar :name="user.name" :url="user.avatar" :size="20" :radius="2"></app-avatar>
     
     <b>{{ user.name }}</b>
-    <span class="remove" @click="remove"><i class="icon icon-x"></i></span>
+    <span v-if="!task.closed" class="remove" @click="remove"><i class="icon icon-x"></i></span>
   </div>
 </template>
 <script>
@@ -17,6 +17,9 @@ export default {
     },
     isActive() {
       return this.$store.getters.isOnline(this.user_id);
+    },
+    task() {
+      return this.$store.state.current_task;
     }
   },
   methods: {
