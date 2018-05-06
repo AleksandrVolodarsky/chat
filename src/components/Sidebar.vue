@@ -17,7 +17,7 @@
         v-if="tasks_opened"
         v-for="task in tasks_opened" 
         :key="task._id"
-        v-bind:to="'/task/one/' + task._id">{{ task.title }}<at-badge v-if="getUnreadCount(task) > 0" :value="getUnreadCount(task)"></at-badge></at-menu-item>
+        :to="'/task/one/' + task._id">{{ task.title }}<at-badge v-if="getUnreadCount(task) > 0" :value="getUnreadCount(task)"></at-badge></at-menu-item>
 
       <a 
         v-if="tasks_closed.length > 0 && !is_show_closed_tasks"
@@ -163,5 +163,15 @@ export default {
   .show-closed-tasks i.icon{
     float: right;
     font-size: 14px;
+    margin-top: 1px;
+  }
+</style>
+<style>
+  .at-menu--dark .at-menu__item.at-menu__item--active a.at-menu__item-link{
+    background: transparent;
+  }
+
+  .at-menu--dark .at-menu__item.at-menu__item--active a.at-menu__item-link:after{
+    display: none;
   }
 </style>
