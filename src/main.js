@@ -17,10 +17,15 @@ import RightSidebar from './components/RightSidebar'
 import SidebarParticipant from './components/SidebarParticipant'
 import Files from './components/Files'
 import FilterLog from './filters/log';
+import VTooltip from 'v-tooltip'
 import * as moment from 'vue-moment';
 
 Vue.use(AtUI);
 Vue.use(moment);
+Vue.use(VTooltip);
+VTooltip.options.autoHide = false;
+
+
 Vue.component('app-or-separator', OrSeparator);
 Vue.component('app-message', Message);
 Vue.component('app-messages', Messages);

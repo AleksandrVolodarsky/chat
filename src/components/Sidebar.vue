@@ -12,7 +12,8 @@
       </div>
       <at-menu-item to="/settings" name="settings"><i class="icon icon-settings"></i>Settings</at-menu-item>
       <at-menu-item name="logout"><i class="icon icon-power"></i>Log out</at-menu-item>
-      <h2><router-link to="/tasks">Tasks</router-link><router-link to="/task/add"><i class="icon icon-plus-circle"></i></router-link></h2>
+
+      <h2><router-link to="/tasks" v-tooltip.top-end="'Browse all tasks'">Tasks</router-link><router-link to="/task/add" v-tooltip.top-start="'Add task'"><i class="icon icon-plus-circle"></i></router-link></h2>
       <at-menu-item
         v-if="tasks_opened"
         v-for="task in tasks_opened" 
@@ -101,6 +102,11 @@ export default {
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
+    display: flex;
+  }
+
+  h2 a:first-child{
+    margin-right: auto;
   }
 
   h2 i.icon{
