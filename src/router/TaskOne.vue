@@ -64,8 +64,13 @@
             <at-select :disabled="posible_participants.length == 0" size="large" @on-change="participantChange">
               <at-option 
                 v-for="user in posible_participants" 
+                :label="user.name"
                 :value="user._id" 
-                :key="user._id">{{ user.name }}</at-option>
+                :key="user._id">
+                
+                <div class="badge" :class="{ active: $store.getters.isOnline(user._id) }"></div>
+                <app-avatar :name="user.name" :url="user.avatar" :size="20" :radius="2"></app-avatar> {{ user.name }}
+              </at-option>
             </at-select>
           </label>
           <span v-if="task.participants" class="participants-list">
@@ -429,12 +434,38 @@ main{
   line-height: 26px;
 }
 
+.at-select .at-select__option{
+  display: flex;
+  align-items: center;
+  line-height: 30px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0 5px;
+  border-radius: 2px;
+}
+
+.at-select .at-select__option .badge{
+  background: #EEF0F0;
+  border-radius: 100%;
+  width: 9px;
+  height: 9px;
+  margin-right: 7px;
+}
+
+.at-select .at-select__option .badge.active{
+  background: #13CE66;
+}
+
+.at-select .at-select__option .avatar{
+  margin-right: 7px;
+}
+
 </style>
 <style>
-  .message-area .at-tooltip__trigger{
-    height: 100%;
-  }
-  .participants .at-select__input{
-    z-index: 2;
-  }
+.message-area .at-tooltip__trigger{
+  height: 100%;
+}
+.participants .at-select__input{
+  z-index: 2;
+}
 </style>
