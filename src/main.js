@@ -18,12 +18,14 @@ import SidebarParticipant from './components/SidebarParticipant'
 import Files from './components/Files'
 import FilterLog from './filters/log';
 import VTooltip from 'v-tooltip'
+import VueNativeNotification from 'vue-native-notification'
 import * as moment from 'vue-moment';
 
 Vue.use(AtUI);
 Vue.use(moment);
 Vue.use(VTooltip);
 VTooltip.options.autoHide = false;
+Vue.use(VueNativeNotification, { requestOnNotify: true })
 
 
 Vue.component('app-or-separator', OrSeparator);
@@ -81,10 +83,24 @@ export default new Vue({
       console.error(v);
     },
     message_add: function(m) {
-      if (m.ops[0].task_id == this.$store.state.current_task._id) {
+      let message = m.ops[0];
+      if (this.$store.state.current_task && message.task_id == this.$store.state.current_task._id) {
         this.$store.commit(
           'setMessages', 
-          this.$store.state.messages.concat([m.ops[0]])
+          this.$store.state.messages.concat([message])
+        );
+      } else {
+        this.$notification.show(
+          'New message', 
+          { 
+            body: message.message,
+            icon: require('./assets/imgs/logo.png')
+          }, 
+          {
+            onclick: () => {
+              this.$router.push(`/task/one/${ message.task_id }/${ message._id }`);
+            }
+          }
         );
       }
     },

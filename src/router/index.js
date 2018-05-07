@@ -58,6 +58,14 @@ export default new Router({
       }
     },
     {
+      path: '/task/one/:task_id/:message_id',
+      name: 'Task one',
+      component: TaskOne,
+      meta: {
+        requires_auth: true
+      }
+    },
+    {
       path: '/settings',
       name: 'Settings',
       component: Settings,

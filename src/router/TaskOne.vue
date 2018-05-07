@@ -40,7 +40,7 @@
                 </div>
               </div>
             </div>
-            <app-messages :autoscroll="false" :messages="messages"></app-messages>
+            <app-messages :autoscroll="true" :messages="messages"></app-messages>
           </div>
 
           <div v-if="!task.closed" class="bottom">
@@ -234,6 +234,14 @@ export default {
     },
     removeFile(file) {
       this.files = this.files.filter(f => f.id != file.id);
+    },
+    scrollToMessage(id) {
+      let old_bg = document.getElementById('message-' + id).style.background;
+      document.getElementById('message-' + id).scrollIntoView();
+      document.getElementById('message-' + id).style.background = '#ffffdc';
+      setTimeout(() => {
+        document.getElementById('message-' + id).style.background = old_bg;
+      }, 5000);
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -243,8 +251,19 @@ export default {
         task => {
           store.commit('setCurrentTask', to.params.task_id);
           store.commit('setTasks', store.state.tasks);
-          store.dispatch('requestMessages', to.params.task_id);
-          next();
+          store.dispatch('requestMessages', to.params.task_id).then(
+            () => {
+              if (to.params.message_id) {
+                next(
+                  vm => {
+                    vm.scrollToMessage(to.params.message_id);
+                  }
+                );
+              } else {
+                next();
+              }
+            }
+          );
         }
       )
       .catch(
@@ -260,7 +279,13 @@ export default {
         task => {
           store.commit('setCurrentTask', to.params.task_id);
           store.commit('setTasks', store.state.tasks);
-          store.dispatch('requestMessages', to.params.task_id);
+          store.dispatch('requestMessages', to.params.task_id).then(
+            () => {
+              if (to.params.message_id) {
+                this.scrollToMessage(to.params.message_id);
+              }
+            }
+          );
           next();
         }
       )

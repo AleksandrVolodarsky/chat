@@ -1,5 +1,5 @@
 <template>
-  <div class="message" :class="{ same: same }">
+  <div class="message" :class="{ same: same }" :id="'message-' + message._id">
     <div class="left">
       <app-avatar v-if="!same" :name="owner_obj.name" :url="owner_obj.avatar"></app-avatar>
       <at-tooltip v-if="same && message.created" placement="top-left" :content="message.created">
